@@ -75,6 +75,20 @@ module HtmlConverter
           expect(subject.convert).to eq(['ab'])
         end
       end
+
+      context "when '<ul>\\n<li>a<br>\\n</li>\\r\\n</ul>'" do
+        let(:input) { "<ul>\n<li>a<br>\n</li>\r\n</ul>" }
+        it "returns ['* a']" do
+          expect(subject.convert).to eq(['* a'])
+        end
+      end
+
+      context "when '<b>a<br></b>'" do
+        let(:input) { "<b>a<br></b>" }
+        it "returns ['<b>a', '</b>']" do
+          expect(subject.convert).to eq(['<b>a', '</b>'])
+        end
+      end
     end
   end
 end

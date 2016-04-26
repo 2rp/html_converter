@@ -9,7 +9,7 @@ module HtmlConverter
       out = []
       nodes.each_with_index do |node, index|
         out += extract_inner_html(node)
-        out << '' if ['p'].include?(node.name) && nodes.size > index+1
+        out << '' if ['p', 'ul', 'ol'].include?(node.name) && nodes.size > index+1
       end
       out
     end
@@ -17,9 +17,10 @@ module HtmlConverter
 private
 
     def nodes
-      doc = Nokogiri::HTML.fragment(self.html)
+      clean_html = clean(self.html)
+      doc = Nokogiri::HTML.fragment(clean_html)
       if ['text', 'strong', 'em', 'i', 'b'].include?(doc.children.first.name)
-        Nokogiri::HTML.fragment("<div>#{self.html}</div>").children
+        Nokogiri::HTML.fragment("<div>#{clean_html}</div>").children
       else
         doc.children
       end
@@ -28,12 +29,22 @@ private
     def extract_inner_html(node)
       case node.name
       when 'ul'
-        node.children.map {|n| "* #{clean(n.inner_html)}"}
+        extract_list_items(node.children) { |counter| '*' }
       when 'ol'
-        index = 0
-        node.children.map {|n| "#{index+=1}. #{clean(n.inner_html)}"}
+        extract_list_items(node.children) { |counter| "#{counter}."}
       else
-        [*split_by_soft_break(node.inner_html)]
+        split_by_soft_break(node.inner_html)
+      end
+    end
+
+    def extract_list_items(children)
+      counter = 0
+      children.inject([]) do |out, child|
+        list_symbol = yield(counter+=1)
+        items = split_by_soft_break(child.inner_html)
+        out << "#{list_symbol} #{items.first}" unless items.empty?
+        out += items[1..-1] if items.size > 1
+        out
       end
     end
 
@@ -48,5 +59,6 @@ private
         out.strip!
       end
     end
+
   end
 end
