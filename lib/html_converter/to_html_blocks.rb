@@ -18,6 +18,7 @@ private
 
     def nodes
       clean_html = clean(self.html)
+      return [] if clean_html.empty?
       doc = Nokogiri::HTML.fragment(clean_html)
       if ['text', 'strong', 'em', 'i', 'b'].include?(doc.children.first.name)
         Nokogiri::HTML.fragment("<div>#{clean_html}</div>").children
@@ -53,6 +54,7 @@ private
     end
 
     def clean(html)
+      return '' if html.nil?
       html.tap do |out|
         out.gsub!(/\r/, "")
         out.gsub!(/\n/, "")

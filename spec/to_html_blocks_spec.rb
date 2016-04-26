@@ -89,6 +89,20 @@ module HtmlConverter
           expect(subject.convert).to eq(['<b>a', '</b>'])
         end
       end
+
+      context "when '' (blank)" do
+        let(:input) { "" }
+        it "returns []" do
+          expect(subject.convert).to eq([])
+        end
+      end
+
+      context "when nil" do
+        let(:input) { nil }
+        it "returns []" do
+          expect(subject.convert).to eq([])
+        end
+      end
     end
   end
 end
