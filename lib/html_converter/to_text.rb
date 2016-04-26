@@ -6,8 +6,8 @@ module HtmlConverter
     end
 
     def convert
-      doc = Nokogiri::HTML.fragment(@html)
-      doc.text
+      doc = Nokogiri::HTML(@html)
+      doc.xpath("//text()").map(&:text).join(" ").gsub('  ', ' ')
     end
   end
 end
