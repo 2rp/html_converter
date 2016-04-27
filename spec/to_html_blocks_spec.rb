@@ -103,6 +103,13 @@ module HtmlConverter
           expect(subject.convert).to eq([])
         end
       end
+
+      context "when '<3 test'" do
+        let(:input) { '<3 test' }
+        it "returns ['<3 test']" do
+          expect(subject.convert).to eq(['<3 test'])
+        end
+      end
     end
   end
 end

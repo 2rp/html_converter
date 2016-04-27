@@ -1,27 +1,27 @@
 module HtmlConverter
   class ToHtmlBlocks
-    attr_reader :html
+    attr_reader :html, :clean_html
     def initialize(html)
       @html = html
+      @clean_html = clean(html)
     end
 
     def convert
-      out = []
-      nodes.each_with_index do |node, index|
+      return [] if self.clean_html.empty?
+      return [self.clean_html] if nodes.empty?
+      nodes.each_with_index.inject([]) do |out, (node, index)|
         out += extract_inner_html(node)
         out << '' if ['p', 'ul', 'ol'].include?(node.name) && nodes.size > index+1
+        out
       end
-      out
     end
 
 private
 
     def nodes
-      clean_html = clean(self.html)
-      return [] if clean_html.empty?
-      doc = Nokogiri::HTML.fragment(clean_html)
-      if ['text', 'strong', 'em', 'i', 'b'].include?(doc.children.first.name)
-        Nokogiri::HTML.fragment("<div>#{clean_html}</div>").children
+      doc = Nokogiri::HTML.fragment(self.clean_html)
+      if missing_wrapper?(doc)
+        Nokogiri::HTML.fragment("<div>#{self.clean_html}</div>").children
       else
         doc.children
       end
@@ -51,6 +51,11 @@ private
 
     def split_by_soft_break(html)
       html.split(/<\s*[b][r]\s*\/*>/).map { |h| clean(h) }
+    end
+
+    def missing_wrapper?(doc)
+      first_node = doc.children.first
+      first_node && ['text', 'strong', 'em', 'i', 'b'].include?(first_node.name)
     end
 
     def clean(html)
