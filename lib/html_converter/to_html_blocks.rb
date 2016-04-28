@@ -30,7 +30,7 @@ private
     def extract_inner_html(node)
       case node.name
       when 'ul'
-        extract_list_items(node.children) { |counter| '*' }
+        extract_list_items(node.children) { |counter| '-' }
       when 'ol'
         extract_list_items(node.children) { |counter| "#{counter}."}
       else

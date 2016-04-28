@@ -22,8 +22,8 @@ module HtmlConverter
 
       context "when '<ul><li>a</li><li>b</li></ul>'" do
         let(:input) { '<ul><li>a</li><li>b</li></ul>' }
-        it "returns ['* a', '* b']" do
-          expect(subject.convert).to eq(['* a', '* b'])
+        it "returns ['- a', '- b']" do
+          expect(subject.convert).to eq(['- a', '- b'])
         end
       end
 
@@ -78,8 +78,8 @@ module HtmlConverter
 
       context "when '<ul>\\n<li>a<br>\\n</li>\\r\\n</ul>'" do
         let(:input) { "<ul>\n<li>a<br>\n</li>\r\n</ul>" }
-        it "returns ['* a']" do
-          expect(subject.convert).to eq(['* a'])
+        it "returns ['- a']" do
+          expect(subject.convert).to eq(['- a'])
         end
       end
 
