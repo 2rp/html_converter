@@ -34,7 +34,9 @@ private
       when 'ol'
         extract_list_items(node.children) { |counter| "#{counter}."}
       else
-        split_by_soft_break(node.inner_html)
+        value = node.inner_html
+        value = !value.nil? && !value.empty? ? value : node.text
+        split_by_soft_break(value)
       end
     end
 
