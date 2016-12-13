@@ -2,8 +2,8 @@ module HtmlConverter
   class ToHtmlBlocks
     attr_reader :html, :clean_html
     def initialize(html)
-      @html = html
-      @clean_html = clean(html)
+      @html = html.dup
+      @clean_html = clean(html.dup)
     end
 
     def convert
@@ -61,12 +61,7 @@ private
     end
 
     def clean(html)
-      return '' if html.nil?
-      html.tap do |out|
-        out.gsub!(/\r/, "")
-        out.gsub!(/\n/, "")
-        out.strip!
-      end
+      html.to_s.gsub(/[\r\n]/, "").strip
     end
 
   end
