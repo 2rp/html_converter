@@ -2,7 +2,7 @@ module HtmlConverter
   class ToText
     attr_reader :html
     def initialize(html)
-      @html = html.dup
+      @html = (html || '').dup
     end
 
     def convert

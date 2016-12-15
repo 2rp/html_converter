@@ -2,8 +2,8 @@ module HtmlConverter
   class ToHtmlBlocks
     attr_reader :html, :clean_html
     def initialize(html)
-      @html = html.dup
-      @clean_html = clean(html.dup)
+      @html = (html || '').dup
+      @clean_html = clean(@html.dup)
     end
 
     def convert
